@@ -28,8 +28,16 @@ const VideoDisplay = () => {
       let videoId = '';
       
       if (urlObj.hostname.includes('youtube.com')) {
-        videoId = urlObj.searchParams.get('v') || '';
+        // Handle regular videos: youtube.com/watch?v=VIDEO_ID
+        if (urlObj.searchParams.get('v')) {
+          videoId = urlObj.searchParams.get('v') || '';
+        }
+        // Handle YouTube Shorts: youtube.com/shorts/VIDEO_ID
+        else if (urlObj.pathname.includes('/shorts/')) {
+          videoId = urlObj.pathname.split('/shorts/')[1];
+        }
       } else if (urlObj.hostname.includes('youtu.be')) {
+        // Handle youtu.be/VIDEO_ID format
         videoId = urlObj.pathname.slice(1);
       }
       
