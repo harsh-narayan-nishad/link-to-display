@@ -3,19 +3,29 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { VideoIcon, PlayIcon } from "lucide-react";
 
 const VideoForm = () => {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
+  const [notes, setNotes] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && link) {
-      // Store in localStorage for now
-      localStorage.setItem('videoData', JSON.stringify({ title, link }));
+      // Store in localStorage for now with user details
+      const videoData = {
+        title,
+        link,
+        notes: notes || "",
+        createdBy: "Demo User", // Dummy user for now
+        createdAt: new Date().toISOString(),
+        id: Date.now().toString()
+      };
+      localStorage.setItem('videoData', JSON.stringify(videoData));
       navigate('/video');
     }
   };
@@ -69,6 +79,18 @@ const VideoForm = () => {
                   onChange={(e) => setLink(e.target.value)}
                   className="bg-input/50 border-border focus:ring-primary focus:border-primary transition-all duration-300"
                   required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="notes" className="text-foreground">Notes (Optional)</Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Add any notes about this video..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="bg-input/50 border-border focus:ring-primary focus:border-primary transition-all duration-300 min-h-[100px]"
+                  rows={4}
                 />
               </div>
 
